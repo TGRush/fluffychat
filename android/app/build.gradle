@@ -33,6 +33,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 34
+    namespace "com.fluffychat.app"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
