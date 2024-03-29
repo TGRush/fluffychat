@@ -56,7 +56,6 @@ jobs:
           rm -rf fonts/NotoEmoji
           yq -i 'del( .flutter.fonts[] | select(.family == "NotoEmoji") )' pubspec.yaml
       - run: flutter pub get
-      - name: Prepare Android Release Build
       - run: flutter build apk --release
       - name: Upload archive as artifact
         uses: actions/upload-artifact@v4
