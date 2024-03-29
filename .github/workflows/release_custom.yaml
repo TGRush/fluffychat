@@ -30,4 +30,9 @@ jobs:
       - run: flutter build linux --release --target-platform linux-x64
       - name: Create archive
         run: tar -czf fluffychat-linux-x64.tar.gz -C build/linux/x64/release/bundle/ .
+      - name: Upload archive as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build/
 
