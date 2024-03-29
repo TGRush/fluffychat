@@ -33,6 +33,33 @@ jobs:
       - name: Upload archive as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build
-          path: build/
+          name: build-linux
+          path: fluffychat-linux-x64.tar.gz
 
+  build_apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cat .github/workflows/versions.env >> $GITHUB_ENV
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'zulu'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - name: Apply Google Services Patch
+        run: git apply ./scripts/enable-android-google-services.patch
+      - name: Remove Emoji Font
+        run: |
+          rm -rf fonts/NotoEmoji
+          yq -i 'del( .flutter.fonts[] | select(.family == "NotoEmoji") )' pubspec.yaml
+      - run: flutter pub get
+      - name: Prepare Android Release Build
+      - run: flutter build apk --release
+      - name: Upload archive as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-android
+          path: build/app/outputs/apk/release/app-release.apk
